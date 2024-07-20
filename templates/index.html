@@ -1,14 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/output.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/css/output.css" />
     <title>Article Gen</title>
-</head>
-<body>
-    <div class="container">
-        <div class="bg-red-500 text-3xl font-bold underline">Im flly</div>
-    </div>
-</body>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-indigo-600 p-4 shadow-md">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-white text-2xl font-bold">AI Blog Generator</h1>
+        <div class="hidden md:flex space-x-4">
+          <a href="/" class="text-white hover:text-indigo-200">Home</a>
+          <a href="/" class="text-white hover:text-indigo-200">About</a>
+          <a href="/" class="text-white hover:text-indigo-200">Contact</a>
+        </div>
+        <button class="md:hidden text-white focus:outline-none">
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16m-7 6h7"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <main class="container mx-auto mt-8 px-4">
+      <!-- Textarea for prompt -->
+      <div class="mb-8">
+        <label for="prompt" class="block text-gray-700 text-sm font-bold mb-2"
+          >Enter your blog prompt:</label
+        >
+        <textarea
+          id="prompt"
+          rows="4"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          placeholder="Type your prompt here..."
+        ></textarea>
+        <button
+          class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Generate Blog
+        </button>
+      </div>
+
+      <!-- Response div -->
+      <div id="response" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h2 class="text-2xl font-bold mb-4 text-indigo-600">Generated Blog</h2>
+        <div id="blog-content" class="text-gray-700">
+          Your generated blog content will appear here...
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-indigo-600 text-white text-center p-4 mt-8">
+      <p>&copy; 2024 AI Blog Generator. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // Navbar functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuButton = document.querySelector("nav button");
+        const menuItems = document.querySelector("nav div.hidden");
+
+        menuButton.addEventListener("click", function () {
+          menuItems.classList.toggle("hidden");
+          menuItems.classList.toggle("flex");
+          menuItems.classList.toggle("flex-col");
+          menuItems.classList.toggle("absolute");
+          menuItems.classList.toggle("top-16");
+          menuItems.classList.toggle("right-4");
+          menuItems.classList.toggle("bg-indigo-600");
+          menuItems.classList.toggle("p-4");
+          menuItems.classList.toggle("rounded");
+          menuItems.classList.toggle("shadow-md");
+        });
+      });
+
+      // Blog generation functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        const generateButton = document.querySelector("button.bg-indigo-600");
+        const promptTextarea = document.getElementById("prompt");
+        const blogContent = document.getElementById("blog-content");
+
+        generateButton.addEventListener("click", function () {
+          const prompt = promptTextarea.value.trim();
+          const populate = async () => {
+            const data = await fetch("/generate", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ prompt: prompt }),
+            });
+            const blog = await response.json();
+            blogContent.textContent = blog.output;
+          };
+          populate();
+        });
+      });
+    </script>
+  </body>
 </html>
